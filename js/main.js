@@ -13,9 +13,13 @@ function comecaArrastar (evento){
 }
 
 function recebeAlgo (evento){
-    if (arrastado){
+    if (arrastado && evento.target.classList.contains('casa')){
         evento.target.appendChild (arrastado);
+        const posDisco = arrastado.dataset.posicao;
+        const posCasa = evento.target.dataset.posicao;
+        console.log(`moveu o disco de ${posDisco} para ${posCasa}`);
         arrastado = null;
+
     }
 }
 
@@ -27,13 +31,14 @@ function setup(){
     const tabuleiro = getTabuleiro();
     for (let i = 0; i < tabuleiro.length; i++) {
         const casa = tabuleiro[i];
-        const eCasa = criaCasa (casa);
+        const eCasa = criaCasa (casa, i);
         eTabuleiro.appendChild(eCasa);       
     }
 }
 
-function criaCasa(casa){
+function criaCasa(casa,k){
     const eCasa = document.createElement('div');
+    eCasa.dataset.posicao = k;
     eCasa.classList.add("casa");
     eCasa.addEventListener ('dragover', passouPorCima);
     eCasa.addEventListener ('drop', recebeAlgo);
@@ -45,8 +50,10 @@ function criaCasa(casa){
     return eCasa;
 }
 
-function criaDisco (casa){
+function criaDisco (casa, k){
     const eDisco = document.createElement('div');
+    eDisco.draggable = true;
+    eDisco.dataset.posicao = k;
     eDisco.classList.add('disco');
     eDisco.addEventListener('dragstart', comecaArrastar);
     if (casa === 'p'){
